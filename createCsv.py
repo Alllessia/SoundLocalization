@@ -10,11 +10,9 @@ if __name__ == '__main__':
     result = pandas.DataFrame(columns=column_names)
 
     for file in glob.glob('audioSamples/20200512-202942/*.wav'):
-        path = file.split("\\")
-        id_audio = path[1].split(".")
+        id_audio = (file.split("\\"))[1].split(".")
         id_audio = id_audio[0] + "." + id_audio[1]
-        audio_name = file.split("_")
-        audio_name = audio_name[1].split(".")
+        audio_name = (id_audio.split("_"))[1].split(".")
         audio_timestamp = float(audio_name[0] + "." + audio_name[1])
         indexAngles = abs(logAngles[1] - audio_timestamp).idxmin()
         indexHead = abs(logHeadState[1] - logAngles.at[indexAngles, 1]).idxmin()
