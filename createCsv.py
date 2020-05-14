@@ -2,6 +2,9 @@ if __name__ == '__main__':
     import pandas
     import glob
 
+    ID_AUDIO = AUDIO_NAME = AUDIO_TIMESTAMP = ""
+    INDEX_ANGLE = INDEX_HEAD = 0
+
     logAngles = pandas.DataFrame(pandas.read_csv('soudLocalizer_dumper/logAngles/data.log', sep=' ', header=None))
     logHeadState = pandas.DataFrame(pandas.read_csv('soudlocalizer_dumper/logHeadState/data.log',
                                                     sep=' ', header=None, index_col=0))
@@ -10,16 +13,16 @@ if __name__ == '__main__':
     result = pandas.DataFrame(columns=column_names)
 
     for file in glob.glob('audioSamples/20200512-202942/*.wav'):
-        id_audio = (file.split("\\"))[1].split(".")
-        id_audio = id_audio[0] + "." + id_audio[1]
-        audio_name = (id_audio.split("_"))[1].split(".")
-        audio_timestamp = float(audio_name[0] + "." + audio_name[1])
-        indexAngles = abs(logAngles[1] - audio_timestamp).idxmin()
-        indexHead = abs(logHeadState[1] - logAngles.at[indexAngles, 1]).idxmin()
-        result_aux = pandas.DataFrame([[id_audio, logAngles.at[indexAngles, 2], logAngles.at[indexAngles, 3],
-                                        logHeadState.at[indexHead, 2], logHeadState.at[indexHead, 3],
-                                        logHeadState.at[indexHead, 4], logHeadState.at[indexHead, 5],
-                                        logHeadState.at[indexHead, 6], logHeadState.at[indexHead, 7]]],
+        ID_AUDIO = (file.split("\\"))[1].split(".")
+        ID_AUDIO = ID_AUDIO[0] + "." + ID_AUDIO[1]
+        AUDIO_NAME = (ID_AUDIO.split("_"))[1].split(".")
+        AUDIO_TIMESTAMP = float(AUDIO_NAME[0] + "." + AUDIO_NAME[1])
+        INDEX_ANGLE = abs(logAngles[1] - AUDIO_TIMESTAMP).idxmin()
+        INDEX_HEAD = abs(logHeadState[1] - logAngles.at[INDEX_ANGLE, 1]).idxmin()
+        result_aux = pandas.DataFrame([[ID_AUDIO, logAngles.at[INDEX_ANGLE, 2], logAngles.at[INDEX_ANGLE, 3],
+                                        logHeadState.at[INDEX_HEAD, 2], logHeadState.at[INDEX_HEAD, 3],
+                                        logHeadState.at[INDEX_HEAD, 4], logHeadState.at[INDEX_HEAD, 5],
+                                        logHeadState.at[INDEX_HEAD, 6], logHeadState.at[INDEX_HEAD, 7]]],
                                       columns=column_names)
         result = result.append(result_aux, ignore_index=True)
 
